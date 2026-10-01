@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "113484449349",
+    "project_id": "quiz-app-mohib",
+    "storage_bucket": "quiz-app-mohib.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113484449349:android:ec24f09d8f4fe756aec52c",
+        "android_client_info": {
+          "package_name": "com.example.quiz_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmFQEfqgvtmkyxxqJdDe11QRloXIpeu5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
