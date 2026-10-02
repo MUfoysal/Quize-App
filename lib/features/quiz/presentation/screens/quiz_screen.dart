@@ -112,7 +112,15 @@ class _QuizScreenState extends State<QuizScreen> {
           'Question ${_currentQuestionIndex + 1}/${_questions.length}',
         ),
       ),
-      body: Padding(
+      body:Column(
+        children: [
+          LinearProgressIndicator(
+            value: (_currentQuestionIndex +1) / _questions.length,
+          ),
+        
+      
+      
+      Expanded(child:  Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,6 +193,10 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ],
         ),
+      )
+        
+      )
+      ]
       ),
     );
   }
