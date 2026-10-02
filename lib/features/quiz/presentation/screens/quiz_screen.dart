@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:quiz_app/features/result/presentation/screens/result_screen.dart';
@@ -67,36 +66,30 @@ class _QuizScreenState extends State<QuizScreen> {
   void _selectAnswer(int index) {
     if (_hasAnswered) return;
 
+    final question = _questions[_currentQuestionIndex];
+
     setState(() {
       _selectedAnswerIndex = index;
       _hasAnswered = true;
+
+      if (index == question.correctAnswerIndex) {
+        _score++;
+      }
     });
   }
 
   void _goToNextQuestion() {
-    final question = _questions[_currentQuestionIndex];
-
-    if (_selectedAnswerIndex == question.correctAnswerIndex) {
-      _score++;
-    }
-
-    final isLastQuestion =
-        _currentQuestionIndex == _questions.length - 1;
-
+    final isLastQuestion = _currentQuestionIndex == _questions.length - 1;
     if (isLastQuestion) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => ResultScreen(
-            score: _score,
-            totalQuestions: _questions.length,
-          ),
+          builder: (context) =>
+              ResultScreen(score: _score, totalQuestions: _questions.length),
         ),
       );
-
       return;
     }
-
     setState(() {
       _currentQuestionIndex++;
       _selectedAnswerIndex = null;
@@ -107,11 +100,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_errorMessage != null) {
@@ -129,10 +118,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   color: Colors.red,
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  _errorMessage!,
-                  textAlign: TextAlign.center,
-                ),
+                Text(_errorMessage!, textAlign: TextAlign.center),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _loadQuestions,
@@ -147,9 +133,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
     if (_questions.isEmpty) {
       return const Scaffold(
-        body: Center(
-          child: Text('No questions available.'),
-        ),
+        body: Center(child: Text('No questions available.')),
       );
     }
 
@@ -159,13 +143,10 @@ class _QuizScreenState extends State<QuizScreen> {
 
     final questionNumber = _currentQuestionIndex + 1;
 
-    final isLastQuestion =
-        _currentQuestionIndex == totalQuestions - 1;
+    final isLastQuestion = _currentQuestionIndex == totalQuestions - 1;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Quiz'),
-      ),
+      appBar: AppBar(title: const Text('Quiz')),
       body: SafeArea(
         child: Column(
           children: [
@@ -230,23 +211,15 @@ class _QuizScreenState extends State<QuizScreen> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: InkWell(
-                          onTap: _hasAnswered
-                              ? null
-                              : () => _selectAnswer(i),
+                          onTap: _hasAnswered ? null : () => _selectAnswer(i),
                           borderRadius: BorderRadius.circular(16),
                           child: Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: _getOptionBackgroundColor(
-                                question,
-                                i,
-                              ),
+                              color: _getOptionBackgroundColor(question, i),
                               border: Border.all(
-                                color: _getOptionBorderColor(
-                                  question,
-                                  i,
-                                ),
+                                color: _getOptionBorderColor(question, i),
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(16),
@@ -258,10 +231,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                   height: 36,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: _getOptionBadgeColor(
-                                      question,
-                                      i,
-                                    ),
+                                    color: _getOptionBadgeColor(question, i),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Text(
@@ -276,9 +246,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                 Expanded(
                                   child: Text(
                                     question.options[i],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                    ),
+                                    style: const TextStyle(fontSize: 16),
                                   ),
                                 ),
                               ],
@@ -296,9 +264,7 @@ class _QuizScreenState extends State<QuizScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _hasAnswered
-                      ? _goToNextQuestion
-                      : null,
+                  onPressed: _hasAnswered ? _goToNextQuestion : null,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -321,10 +287,7 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
-  Color _getOptionBackgroundColor(
-    Question question,
-    int index,
-  ) {
+  Color _getOptionBackgroundColor(Question question, int index) {
     if (!_hasAnswered) {
       return Colors.white;
     }
@@ -340,10 +303,7 @@ class _QuizScreenState extends State<QuizScreen> {
     return Colors.white;
   }
 
-  Color _getOptionBorderColor(
-    Question question,
-    int index,
-  ) {
+  Color _getOptionBorderColor(Question question, int index) {
     if (!_hasAnswered) {
       return Colors.grey.shade300;
     }
@@ -359,10 +319,7 @@ class _QuizScreenState extends State<QuizScreen> {
     return Colors.grey.shade300;
   }
 
-  Color _getOptionBadgeColor(
-    Question question,
-    int index,
-  ) {
+  Color _getOptionBadgeColor(Question question, int index) {
     if (!_hasAnswered) {
       return Colors.blue;
     }
