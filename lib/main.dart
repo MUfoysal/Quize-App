@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'features/quiz/presentation/screens/quiz_screen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -21,13 +21,7 @@ class QuizApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Quiz App',
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            'Quiz App',
-          ),
-        ),
-      ),
+      home:const QuizScreen()
     );
   }
 }
