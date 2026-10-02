@@ -24,6 +24,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   int? _selectedAnswerIndex;
   int _score = 0;
+  bool _hasAnswered = false;
 
   @override
   void initState() {
@@ -55,8 +56,10 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void _selectAnswer(int index) {
+    if (_hasAnswered) return;
     setState(() {
       _selectedAnswerIndex = index;
+      _hasAnswered = true;
     });
   }
 
@@ -81,6 +84,7 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       _currentQuestionIndex++;
       _selectedAnswerIndex = null;
+      _hasAnswered = false;
     });
   }
 
@@ -124,6 +128,22 @@ class _QuizScreenState extends State<QuizScreen> {
               final option = question.options[index];
 
               final isSelected = _selectedAnswerIndex == index;
+              final isCorrect = question.correctAnswerIndex == index;
+              final isWrong = _hasAnswered && isSelected && !isCorrect;
+
+              Color borderColor = Colors.grey.shade300;
+              Color backgroundColor = Colors.white;
+
+              if (_hasAnswered && isCorrect) {
+                borderColor = Colors.green;
+                backgroundColor = Colors.green.shade50;
+              } else if (isWrong) {
+                borderColor = Colors.red;
+                backgroundColor = Colors.red.shade50;
+              } else if (isSelected) {
+                borderColor = Colors.blue;
+                backgroundColor = Colors.blue.shade50;
+              }
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
@@ -134,12 +154,9 @@ class _QuizScreenState extends State<QuizScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isSelected ? Colors.blue : Colors.grey.shade300,
-                        width: 2,
-                      ),
+                      border: Border.all(color: borderColor, width: 2),
                       borderRadius: BorderRadius.circular(12),
-                      color: isSelected ? Colors.blue.shade50 : Colors.white,
+                      color: backgroundColor,
                     ),
                     child: Text(option, style: const TextStyle(fontSize: 16)),
                   ),
