@@ -24,11 +24,19 @@ The project is built with Flutter and Firebase Firestore and follows Clean Archi
 
 ### Home Screen
 
-### Right Answer Screen
+![Home Screen](screenshots/home.png)
 
-### Wrong Answer State
+### Correct Answer
+
+![Correct Answer](screenshots/rightAnswer.png)
+
+### Wrong Answer
+
+![Wrong Answer](screenshots/wrongAnswer.png)
 
 ### Result Screen
+
+![Result Screen](screenshots/result.png)
 
 ## Technologies
 
