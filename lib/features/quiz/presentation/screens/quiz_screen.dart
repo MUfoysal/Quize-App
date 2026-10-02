@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:quiz_app/features/result/presentation/screens/result_screen.dart';
 import 'package:quiz_app/features/quiz/data/di/quiz_dependencies.dart';
 import 'package:quiz_app/features/quiz/domain/entities/question.dart';
 import 'package:quiz_app/features/quiz/domain/usecases/get_questions.dart';
 
 class QuizScreen extends StatefulWidget {
-  const new({super.key});
+  const QuizScreen({super.key});
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
@@ -15,8 +15,15 @@ class _QuizScreenState extends State<QuizScreen> {
   late final GetQuestions _getQuestions;
 
   List<Question> _questions = [];
+
   bool _isLoading = true;
+
   String? _errorMessage;
+
+  int _currentQuestionIndex = 0;
+
+  int? _selectedAnswerIndex;
+  int _score = 0;
 
   @override
   void initState() {
@@ -47,23 +54,119 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+  void _selectAnswer(int index) {
+    setState(() {
+      _selectedAnswerIndex = index;
+    });
+  }
+
+  void _goTonextQuestion() {
+    final question = _questions[_currentQuestionIndex];
+
+    if (_selectedAnswerIndex == question.correctAnswerIndex) {
+      _score++;
+    }
+    final isLastQuestion = _currentQuestionIndex == _questions.length - 1;
+
+    if (isLastQuestion) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              ResultScreen(score: _score, totalQuestions: _questions.length),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      _currentQuestionIndex++;
+      _selectedAnswerIndex = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
     if (_errorMessage != null) {
       return Scaffold(body: Center(child: Text(_errorMessage!)));
     }
+
+    if (_questions.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text('No question available.')),
+      );
+    }
+
+    final question = _questions[_currentQuestionIndex];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Quize"),
+        title: Text(
+          'Question ${_currentQuestionIndex + 1}/${_questions.length}',
+        ),
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              question.question,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
 
-      body: Center(
-        child: Text(
-          'Question loaded: ${_questions.length}',
+            const SizedBox(height: 24),
 
+            ...List.generate(question.options.length, (index) {
+              final option = question.options[index];
+
+              final isSelected = _selectedAnswerIndex == index;
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: InkWell(
+                  onTap: () => _selectAnswer(index),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: isSelected ? Colors.blue : Colors.grey.shade300,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      color: isSelected ? Colors.blue.shade50 : Colors.white,
+                    ),
+                    child: Text(option, style: const TextStyle(fontSize: 16)),
+                  ),
+                ),
+              );
+            }),
+            const SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _selectedAnswerIndex == null
+                    ? null
+                    : _goTonextQuestion,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _selectedAnswerIndex == null
+                      ? Colors.grey
+                      : Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Next',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
