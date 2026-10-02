@@ -20,6 +20,16 @@ The project is built with Flutter and Firebase Firestore and follows Clean Archi
 * Error handling with retry option
 * Responsive Flutter UI
 
+## Screenshots
+
+### Home Screen
+
+### Right Answer Screen
+
+### Wrong Answer State
+
+### Result Screen
+
 ## Technologies
 
 * Flutter
